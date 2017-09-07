@@ -1,0 +1,21 @@
+{
+    "name": "zgs225/lumen-prometheus",
+    "description": "A prometheus client for lumen framework.",
+    "require-dev": {
+        "phpunit/phpunit": "^6.3"
+    },
+    "authors": [
+        {
+            "name": "zgs225",
+            "email": "zgs225@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Prometheus\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
