@@ -28,12 +28,15 @@ abstract class Base implements Collector, Metric
         $this->buildFQName($namespace, $subsystem, $name);
         $this->setLabels($labels);
         $this->generateID();
+        if (strlen($helper) == 0) {
+            throw new \InvalidArgumentException('帮助信息不能为空');
+        }
         $this->helper = $helper;
     }
 
     public function getFQName()
     {
-        $this->fqName;
+        return $this->fqName;
     }
 
     public function getHelp()
@@ -54,19 +57,7 @@ abstract class Base implements Collector, Metric
 
     protected function generateID()
     {
-        $data = $this->fqName;
-        if (!empty($this->labels)) {
-            $first = true;
-            $data .= '{';
-            foreach($this->labels as $key => $val) {
-                if (!$first) {
-                    $data .= ',';
-                }
-                $data .= $key.':'.$val;
-                $first = false;
-            }
-            $data .= '}';
-        }
+        $data = (string) $this;
         $hash = hash('fnv164', $data);
         $this->id = hexdec($hash);
     }
@@ -95,5 +86,23 @@ abstract class Base implements Collector, Metric
             throw new \InvalidArgumentException("统计项名称不正确: ".$fqName);
 
         $this->fqName = $fqName;
+    }
+
+    function __toString()
+    {
+        $data = $this->fqName;
+        if (!empty($this->labels)) {
+            $first = true;
+            $data .= '{';
+            foreach($this->labels as $key => $val) {
+                if (!$first) {
+                    $data .= ',';
+                }
+                $data .= $key.':'.$val;
+                $first = false;
+            }
+            $data .= '}';
+        }
+        return $data;
     }
 }
