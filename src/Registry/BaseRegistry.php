@@ -26,6 +26,9 @@ class BaseRegistry implements Registry
         $this->name = $name;
     }
 
+    /**
+     * @return Registry
+     */
     public static function defaultRegistry()
     {
         return new static("_default");

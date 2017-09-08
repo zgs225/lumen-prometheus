@@ -15,7 +15,9 @@ class Counter extends Base implements CounterContract
 
     public function collect()
     {
-        // TODO: Implement collect() method.
+        $sample = new Sample($this->getFQName(), $this->getLabels(), $this->value);
+        $family = new MetricFamilySamples($this->getFQName(), Type::COUNTER, $this->getHelp(), [$sample]);
+        return [$family];
     }
 
     public function inc()
