@@ -1,15 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Yuez
- * Date: 2017/9/8
- * Time: 08:15
- */
 
 namespace Prometheus\Contracts\Metrics;
 
+use Prometheus\Contracts\Collector;
+use Prometheus\Contracts\Metric;
 
-interface Counter
+interface Counter extends Metric, Collector
 {
+    public function inc();
 
+    public function add($by);
 }

@@ -10,7 +10,9 @@
       "email": "zgs225@gmail.com"
     }
   ],
-  "require": {},
+  "require": {
+    "illuminate/support": "5.4"
+  },
   "autoload": {
     "psr-4": {
       "Prometheus\\": "src/"
