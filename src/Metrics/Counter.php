@@ -28,7 +28,7 @@ class Counter extends Base implements CounterContract
     public function add($by)
     {
         if ($by < 0)
-            throw new \InvalidArgumentException("值不能是复数");
+            throw new \InvalidArgumentException("值不能是负数");
         $this->value += $by;
     }
 }

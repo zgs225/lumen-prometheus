@@ -23,4 +23,14 @@ abstract class Base extends \Prometheus\Metrics\Base
         $this->lock  = $lock;
         parent::__construct($namespace, $subsystem, $name, $helper, $labels);
     }
+
+    protected function metricKey()
+    {
+        return 'metric:'.$this->getIdentifier();
+    }
+
+    protected function sync()
+    {
+        $this->store->put($this->metricKey(), $this);
+    }
 }

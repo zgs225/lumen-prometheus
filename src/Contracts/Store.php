@@ -11,7 +11,16 @@ namespace Prometheus\Contracts;
  */
 interface Store
 {
+    /**
+     * @param $key
+     * @param $val
+     * @return mixed
+     */
     public function put($key, $val);
 
+    /**
+     * @param $key
+     * @return mixed
+     */
     public function get($key);
 }
