@@ -31,4 +31,11 @@ class HelpersTest extends TestCase
             $this->assertFalse(isValidLabelName($label));
         }
     }
+
+    public function testEscapeString()
+    {
+        $t1 = "hello world\", public\\world\n";
+        $t2 = escapeString($t1);
+        $this->assertEquals("hello world\\\", public\\\\world\\\n", $t2);
+    }
 }

@@ -76,4 +76,29 @@ class Sample implements JsonSerializable
             'labels' => $this->labels
         ];
     }
+
+    public function getValueText()
+    {
+        if (is_nan($this->value))
+            return "NaN";
+        if (is_infinite($this->value))
+            return "+Inf";
+        return (string) $this->value;
+    }
+
+    public function getLabelsText()
+    {
+        if (count($this->labels) == 0)
+            return '';
+        $text  = '{';
+        $first = true;
+        foreach($this->labels as $key => $val) {
+            if (!$first)
+                $text .= ',';
+            $text .= sprintf('%s="%s"', $key, escapeString($val));
+            $first = false;
+        }
+        $text .= '}';
+        return $text;
+    }
 }

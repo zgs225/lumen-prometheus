@@ -9,4 +9,6 @@ interface Registry
     public function register(Base $metric);
 
     public function unregister(Base $metric);
+
+    public function all();
 }

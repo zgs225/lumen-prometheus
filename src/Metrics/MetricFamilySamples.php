@@ -68,4 +68,22 @@ class MetricFamilySamples implements \JsonSerializable
             'samples' => $this->samples
         ];
     }
+
+    public function getTypeString()
+    {
+        switch($this->getType()) {
+            case TYPE::COUNTER:
+                return 'counter';
+            case TYPE::GAUGE:
+                return 'gauge';
+            case TYPE::SUMMARY:
+                return 'summary';
+            case TYPE::HISTOGRAM:
+                return 'histogram';
+            case TYPE::UNTYPED:
+                return 'untyped';
+            default:
+                throw new \InvalidArgumentException("未知的统计类型: %d", $this->getType());
+        }
+    }
 }

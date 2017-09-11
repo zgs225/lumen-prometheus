@@ -45,4 +45,9 @@ class BaseRegistry implements Registry
     {
         unset($this->container[$metric->getIdentifier()]);
     }
+
+    public function all()
+    {
+        return array_values($this->container);
+    }
 }

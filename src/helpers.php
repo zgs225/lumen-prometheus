@@ -36,3 +36,12 @@ if (!function_exists('isValidLabelName')) {
         return true;
     }
 }
+
+if (!function_exists('escapeString')) {
+    function escapeString($text)
+    {
+        return preg_replace_callback("[\"|\\\\|\\\n]", function($matches) {
+            return '\\'.$matches[0];
+        }, $text);
+    }
+}
