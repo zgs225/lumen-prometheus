@@ -28,7 +28,7 @@ interface Metric
     /**
      * 获取唯一标识ID, 由fqName和Labels组成的字符串hash后得到
      *
-     * @return int
+     * @return string
      */
     public function getIdentifier();
 }

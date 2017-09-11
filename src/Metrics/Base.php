@@ -59,7 +59,7 @@ abstract class Base implements Collector, Metric
     {
         $data = (string) $this;
         $hash = hash('fnv164', $data);
-        $this->id = hexdec($hash);
+        $this->id = $hash;
     }
 
     protected function setLabels($labels)

@@ -3,7 +3,7 @@
 namespace Prometheus\Registry;
 
 
-use Illuminate\Redis\RedisManager;
+use Illuminate\Container\Container;
 use Prometheus\Contracts\Lock;
 use Prometheus\Contracts\Store;
 use Prometheus\Exceptions\DuplicatedMetricException;
@@ -30,9 +30,10 @@ class StoreRegistry extends BaseRegistry
         $this->lock  = $lock;
     }
 
-    public static function defaultRegistry(RedisManager $redis)
+    public static function defaultRegistry()
     {
         $name  = '_default';
+        $redis = Container::getInstance()->make('redis');
         $lock  = new LaravelRedisSpinLock('lock:registry:'.$name, $redis);
         $store = new LaravelRedis($redis);
         return new static($name, $store, $lock);
@@ -44,9 +45,9 @@ class StoreRegistry extends BaseRegistry
         $this->syncContainers();
         if (isset($this->container[$metric->getIdentifier()])) {
             $this->lock->unlock();
-            throw new DuplicatedMetricException($metric);
+            return;
         }
-        $this->container []= $metric->getIdentifier();
+        $this->container[$metric->getIdentifier()]= true;
         $this->sync();
         $this->lock->unlock();
     }
@@ -65,7 +66,7 @@ class StoreRegistry extends BaseRegistry
         $metrics = [];
         $this->lock->lock();
         $this->syncContainers();
-        foreach($this->container as $identifier) {
+        foreach($this->container as $identifier => $val) {
             $key    = 'metric:'.$identifier;
             $metric = $this->store->get($key);
             if ($metric)

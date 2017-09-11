@@ -17,6 +17,10 @@ class Counter extends Base implements \Prometheus\Contracts\Metrics\Counter
     {
         parent::__construct($store, $namespace, $subsystem, $name, $helper, $labels);
         $this->lock  = new LaravelRedisSpinLock($this->getIdentifier(), $redis);
+        $this->lock->lock();
+        $this->syncValue();
+        $this->sync();
+        $this->lock->unlock();
     }
 
     /**
