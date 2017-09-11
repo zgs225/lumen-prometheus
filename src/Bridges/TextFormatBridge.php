@@ -32,6 +32,7 @@ class TextFormatBridge implements Bridge
         foreach($collectors as $collector) {
             $text .= $this->bridgeCollector($collector);
         }
+        return $text;
     }
 
     protected function bridgeCollector(Collector $collector)
@@ -56,7 +57,7 @@ class TextFormatBridge implements Bridge
 
     protected function bridgeSample(Sample $sample)
     {
-        return sprintf("%s%s %s", $sample->getName(), $sample->getLabelsText(), $sample->getValueText());
+        return sprintf("%s%s %s\n", $sample->getName(), $sample->getLabelsText(), $sample->getValueText());
     }
 
     protected function headerOfMetricFamily(MetricFamilySamples $familySamples)
