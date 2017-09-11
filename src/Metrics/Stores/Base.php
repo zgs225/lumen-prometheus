@@ -17,12 +17,12 @@ abstract class Base extends \Prometheus\Metrics\Base
      */
     protected $lock;
 
-    public function __construct(Store $store, Lock $lock, $namespace, $subsystem, $name, $helper, array $labels)
+    public function __construct(Store $store, $namespace, $subsystem, $name, $helper, array $labels)
     {
-        $this->store = $store;
-        $this->lock  = $lock;
         parent::__construct($namespace, $subsystem, $name, $helper, $labels);
+        $this->store = $store;
     }
+
 
     protected function metricKey()
     {

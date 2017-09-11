@@ -2,19 +2,21 @@
 
 namespace Prometheus\Metrics\Stores;
 
-use Prometheus\Contracts\Lock;
+use Illuminate\Redis\RedisManager;
 use Prometheus\Contracts\Store;
 use Prometheus\Metrics\MetricFamilySamples;
 use Prometheus\Metrics\Sample;
 use Prometheus\Metrics\Type;
+use Prometheus\Supports\LaravelRedisSpinLock;
 
 class Counter extends Base implements \Prometheus\Contracts\Metrics\Counter
 {
     protected $value;
 
-    public function __construct(Store $store, Lock $lock, $namespace, $subsystem, $name, $helper, array $labels)
+    public function __construct(Store $store, RedisManager $redis, $namespace, $subsystem, $name, $helper, array $labels)
     {
-        parent::__construct($store, $lock, $namespace, $subsystem, $name, $helper, $labels);
+        parent::__construct($store, $namespace, $subsystem, $name, $helper, $labels);
+        $this->lock  = new LaravelRedisSpinLock($this->getIdentifier(), $redis);
     }
 
     /**
@@ -51,13 +53,13 @@ class Counter extends Base implements \Prometheus\Contracts\Metrics\Counter
     protected function syncValue()
     {
         $counter = $this->store->get($this->metricKey());
-        if (is_null($counter))
+        if (!$counter)
             $this->value = 0;
         else
             $this->value = $counter->getValue();
     }
 
-    protected function getValue()
+    public function getValue()
     {
         return $this->value;
     }
