@@ -24,6 +24,7 @@ class RedisStoredRegistryTest extends TestCase
         $app->instance('redis', $redis);
         Container::setInstance($app);
         $registry = StoreRegistry::defaultRegistry();
+        $registry->clear();
         $store    = new LaravelRedis($redis);
         $counter  = new Counter($store, $redis, 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 1]);
         $registry->register($counter);

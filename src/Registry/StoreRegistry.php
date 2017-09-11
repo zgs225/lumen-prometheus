@@ -28,8 +28,15 @@ class StoreRegistry extends BaseRegistry
         parent::__construct($name);
         $this->store = $store;
         $this->lock  = $lock;
+        $this->lock->lock();
+        $this->syncContainers();
+        $this->sync();
+        $this->lock->unlock();
     }
 
+    /**
+     * @return StoreRegistry
+     */
     public static function defaultRegistry()
     {
         $name  = '_default';
@@ -93,5 +100,13 @@ class StoreRegistry extends BaseRegistry
     protected function storeKey()
     {
         return 'registry:'.$this->name;
+    }
+
+    public function clear()
+    {
+        $this->lock->lock();
+        $this->container = [];
+        $this->sync();
+        $this->lock->unlock();
     }
 }
