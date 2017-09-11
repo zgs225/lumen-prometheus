@@ -12,7 +12,8 @@
   ],
   "require": {
     "illuminate/support": "5.4",
-    "illuminate/redis": "5.4"
+    "illuminate/redis": "5.4",
+    "illuminate/container": "5.4"
   },
   "autoload": {
     "psr-4": {

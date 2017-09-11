@@ -52,7 +52,7 @@ class Counter extends Base implements \Prometheus\Contracts\Metrics\Counter
 
     protected function syncValue()
     {
-        $counter = $this->store->get($this->metricKey());
+        $counter = $this->store->get($this->storeKey());
         if (!$counter)
             $this->value = 0;
         else

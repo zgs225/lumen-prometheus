@@ -2,7 +2,6 @@
 
 namespace Prometheus\Metrics\Stores;
 
-use Prometheus\Contracts\Lock;
 use Prometheus\Contracts\Store;
 
 abstract class Base extends \Prometheus\Metrics\Base
@@ -24,13 +23,13 @@ abstract class Base extends \Prometheus\Metrics\Base
     }
 
 
-    protected function metricKey()
+    public function storeKey()
     {
         return 'metric:'.$this->getIdentifier();
     }
 
     protected function sync()
     {
-        $this->store->put($this->metricKey(), $this);
+        $this->store->put($this->storeKey(), $this);
     }
 }
