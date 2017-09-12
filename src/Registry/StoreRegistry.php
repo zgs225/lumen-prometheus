@@ -4,10 +4,8 @@ namespace Prometheus\Registry;
 
 
 use Illuminate\Container\Container;
-use Prometheus\Contracts\Lock;
 use Prometheus\Contracts\Store;
 use Prometheus\Metrics\Base;
-use Prometheus\Stores\LaravelRedis;
 use Prometheus\Supports\LaravelRedisSpinLock;
 
 class StoreRegistry extends BaseRegistry
@@ -22,15 +20,26 @@ class StoreRegistry extends BaseRegistry
      */
     protected $lock;
 
-    public function __construct($name, Store $store, Lock $lock)
+    /**
+     * @var \Illuminate\Contracts\Container\Container
+     */
+    protected $container;
+
+    public function __construct(\Illuminate\Contracts\Container\Container $container, $name)
     {
         parent::__construct($name);
-        $this->store = $store;
-        $this->lock  = $lock;
+        $this->container = $container;
+        $this->init();
         $this->lock->lock();
         $this->syncContainers();
         $this->sync();
         $this->lock->unlock();
+    }
+
+    protected function init()
+    {
+        $this->store = $this->container->make(Store::class);
+        $this->lock  = new LaravelRedisSpinLock('registry:'.$this->name, $this->container->make('redis'));
     }
 
     /**
@@ -39,10 +48,7 @@ class StoreRegistry extends BaseRegistry
     public static function defaultRegistry()
     {
         $name  = '_default';
-        $redis = Container::getInstance()->make('redis');
-        $lock  = new LaravelRedisSpinLock('lock:registry:'.$name, $redis);
-        $store = new LaravelRedis($redis);
-        return new static($name, $store, $lock);
+        return new static(Container::getInstance(), $name);
     }
 
     public function register(Base $metric)
