@@ -36,19 +36,7 @@ EOT;
 
     public function testRedisStoredRegistry()
     {
-        $redis = new RedisManager('phpredis', [
-            'default' => [
-                'host'         => 'redis',
-                'port'         => 6379,
-                'password'     => null,
-                'database'     => 0,
-                'prefix'       => 'lord_v3',
-                'read_timeout' => 2
-            ]
-        ]);
-        $app      = new Container();
-        $app->instance('redis', $redis);
-        Container::setInstance($app);
+        $redis    = Container::getInstance()->make('redis');
         $registry = StoreRegistry::defaultRegistry();
         $registry->clear();
         $store    = new LaravelRedis($redis);
@@ -68,7 +56,7 @@ EOT;
 lord_v3_test_total %d
 # HELP lord_v3_test_total 测试计数器
 # TYPE lord_v3_test_total counter
-lord_v3_test_total{complex="4",status="1"} %f
+lord_v3_test_total{complex="4",status="2"} %s
 
 EOT;
         $expected = sprintf($expected, $oldVal1 + 1, $oldVal2 + 1.3);

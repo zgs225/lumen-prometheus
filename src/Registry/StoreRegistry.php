@@ -6,7 +6,6 @@ namespace Prometheus\Registry;
 use Illuminate\Container\Container;
 use Prometheus\Contracts\Lock;
 use Prometheus\Contracts\Store;
-use Prometheus\Exceptions\DuplicatedMetricException;
 use Prometheus\Metrics\Base;
 use Prometheus\Stores\LaravelRedis;
 use Prometheus\Supports\LaravelRedisSpinLock;

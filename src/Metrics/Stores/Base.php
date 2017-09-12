@@ -2,7 +2,9 @@
 
 namespace Prometheus\Metrics\Stores;
 
+use Illuminate\Container\Container;
 use Prometheus\Contracts\Store;
+use Prometheus\Supports\LaravelRedisSpinLock;
 
 abstract class Base extends \Prometheus\Metrics\Base
 {
@@ -31,5 +33,13 @@ abstract class Base extends \Prometheus\Metrics\Base
     protected function sync()
     {
         $this->store->put($this->storeKey(), $this);
+    }
+
+    function __wakeup()
+    {
+        $app   = Container::getInstance();
+        $redis = $app->make('redis');
+        $this->store = $app->make(Store::class);
+        $this->lock  = new LaravelRedisSpinLock($this->getIdentifier(), $redis);
     }
 }
