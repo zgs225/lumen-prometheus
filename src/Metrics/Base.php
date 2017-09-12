@@ -9,7 +9,7 @@ abstract class Base implements Collector, Metric
 {
     protected $fqName;
 
-    protected $helper;
+    protected $help;
 
     protected $labels = [];
 
@@ -31,7 +31,7 @@ abstract class Base implements Collector, Metric
         if (strlen($helper) == 0) {
             throw new \InvalidArgumentException('帮助信息不能为空');
         }
-        $this->helper = $helper;
+        $this->help = $helper;
     }
 
     public function getFQName()
@@ -41,7 +41,7 @@ abstract class Base implements Collector, Metric
 
     public function getHelp()
     {
-        return $this->helper;
+        return $this->help;
     }
 
     public function getLabels()

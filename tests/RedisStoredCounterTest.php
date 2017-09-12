@@ -1,28 +1,18 @@
 <?php
 
+use Illuminate\Container\Container;
 use PHPUnit\Framework\TestCase;
+use Prometheus\Metrics\Stores\Counter;
 use Prometheus\Metrics\Type;
-use Prometheus\Stores\LaravelRedis;
 
 class RedisStoredCounterTest extends TestCase
 {
     public function testCounter()
     {
-        $redis = new Illuminate\Redis\RedisManager('phpredis', [
-            'default' => [
-                'host'         => 'redis',
-                'port'         => 6379,
-                'password'     => null,
-                'database'     => 0,
-                'prefix'       => 'lord_v3',
-                'read_timeout' => 2
-            ]
-        ]);
-        $store   = new LaravelRedis($redis);
-        $counter = new \Prometheus\Metrics\Stores\Counter($store, $redis, 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 1]);
+        $counter = new Counter(Container::getInstance(), 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 1]);
         $counter->inc();
         $oldVal  = $counter->getValue() ?: 0;
-        $counter = new \Prometheus\Metrics\Stores\Counter($store, $redis, 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 1]);
+        $counter = new Counter(Container::getInstance(), 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 1]);
         $counter->inc();
 
         $familyL = $counter->collect();

@@ -2,21 +2,18 @@
 
 namespace Prometheus\Metrics\Stores;
 
-use Illuminate\Redis\RedisManager;
-use Prometheus\Contracts\Store;
+use Illuminate\Contracts\Container\Container;
 use Prometheus\Metrics\MetricFamilySamples;
 use Prometheus\Metrics\Sample;
 use Prometheus\Metrics\Type;
-use Prometheus\Supports\LaravelRedisSpinLock;
 
 class Counter extends Base implements \Prometheus\Contracts\Metrics\Counter
 {
     protected $value;
 
-    public function __construct(Store $store, RedisManager $redis, $namespace, $subsystem, $name, $helper, array $labels)
+    public function __construct(Container $container, $namespace, $subsystem, $name, $helper, array $labels)
     {
-        parent::__construct($store, $namespace, $subsystem, $name, $helper, $labels);
-        $this->lock  = new LaravelRedisSpinLock($this->getIdentifier(), $redis);
+        parent::__construct($container, $namespace, $subsystem, $name, $helper, $labels);
         $this->lock->lock();
         $this->syncValue();
         $this->sync();
@@ -66,5 +63,22 @@ class Counter extends Base implements \Prometheus\Contracts\Metrics\Counter
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function toArray()
+    {
+        return array_merge(parent::toArray(), ['value' => $this->getValue()]);
+    }
+
+    public function serialize()
+    {
+        return serialize($this->toArray());
+    }
+
+    public function unserialize($serialized)
+    {
+        parent::unserialize($serialized);
+        $attributes  = unserialize($serialized);
+        $this->value = $attributes['value'];
     }
 }

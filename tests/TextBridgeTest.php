@@ -36,15 +36,13 @@ EOT;
 
     public function testRedisStoredRegistry()
     {
-        $redis    = Container::getInstance()->make('redis');
         $registry = StoreRegistry::defaultRegistry();
         $registry->clear();
-        $store    = new LaravelRedis($redis);
-        $counter  = new PCounter($store, $redis, 'lord_v3', 'test', 'total', '测试计数器', []);
+        $counter  = new PCounter(Container::getInstance(), 'lord_v3', 'test', 'total', '测试计数器', []);
         $oldVal1  = $counter->getValue();
         $counter->inc();
         $registry->register($counter);
-        $counter  = new PCounter($store, $redis, 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 2]);
+        $counter  = new PCounter(Container::getInstance(), 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 2]);
         $oldVal2  = $counter->getValue();
         $counter->add(1.3);
         $registry->register($counter);

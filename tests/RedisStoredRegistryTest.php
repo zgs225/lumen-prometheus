@@ -10,13 +10,11 @@ class RedisStoredRegistryTest extends TestCase
 {
     public function testRegistry()
     {
-        $store    = Container::getInstance()->make(Store::class);
-        $redis    = Container::getInstance()->make('redis');
         $registry = StoreRegistry::defaultRegistry();
         $registry->clear();
-        $counter  = new Counter($store, $redis, 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 1]);
+        $counter  = new Counter(Container::getInstance(), 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 1]);
         $registry->register($counter);
-        $counter  = new Counter($store, $redis, 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 2]);
+        $counter  = new Counter(Container::getInstance(), 'lord_v3', 'test', 'total', '测试计数器', ['complex' => 4, 'status' => 2]);
         $registry->register($counter);
         $all      = $registry->all();
         $this->assertEquals(2, count($all));
