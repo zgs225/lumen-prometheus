@@ -64,6 +64,7 @@ class TextFormatBridge implements Bridge
                 $result[$key]->pushSamples(...$family->getSamples());
             }
         }
+        sort($result);
         return array_values($result);
     }
 
