@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @package Prometheus\Facades
  *
  * @method static \Prometheus\Builders\CounterBuilder counter()
+ * @method static string bridge()
  */
 class Prometheus extends Facade
 {

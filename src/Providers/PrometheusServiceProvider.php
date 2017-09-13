@@ -4,6 +4,7 @@ namespace Prometheus\Providers;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
+use Prometheus\Bridges\TextFormatBridge;
 use Prometheus\Contracts\Registry;
 use Prometheus\Contracts\Store;
 use Prometheus\Registry\StoreRegistry;
@@ -25,7 +26,9 @@ class PrometheusServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(Prometheus::class, function(Container $app) {
-            return new Prometheus($app);
+            return new Prometheus($app, function(Registry $registry) {
+                return new TextFormatBridge($registry);
+            });
         });
     }
 

@@ -19,13 +19,24 @@ class Prometheus
     protected $registry;
 
     /**
+     * @var \Closure
+     */
+    protected $bridgeResolver;
+
+    /**
+     * @var \Prometheus\Contracts\Bridge
+     */
+    protected $bridge;
+
+    /**
      * Prometheus constructor.
      * @param $container
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, \Closure $bridgeResolver)
     {
-        $this->container = $container;
-        $this->registry  = $container->make(Registry::class);
+        $this->container      = $container;
+        $this->registry       = $container->make(Registry::class);
+        $this->bridgeResolver = $bridgeResolver;
     }
 
     /**
@@ -35,5 +46,13 @@ class Prometheus
     {
         $builder  = new CounterBuilder();
         return $builder->setContainer($this->container)->setRegistry($this->registry);
+    }
+
+    public function bridge()
+    {
+        if (!$this->bridge) {
+            $this->bridge = call_user_func($this->bridgeResolver, $this->registry);
+        }
+        return $this->bridge->bridge();
     }
 }

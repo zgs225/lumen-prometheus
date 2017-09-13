@@ -39,5 +39,8 @@ class PrometheusTest extends TestCase
         $sample  = $samples[0];
         $newVal  = $sample->getValue();
         $this->assertEquals(1, $newVal-$oldVal);
+//        // 查看结果
+//        echo "\n";
+//        echo Prometheus::bridge();
     }
 }
