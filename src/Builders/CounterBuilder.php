@@ -7,7 +7,7 @@ use Prometheus\Metrics\Stores\Counter;
 class CounterBuilder extends BaseBuilder
 {
     /**
-     * @return mixed
+     * @return \Prometheus\Contracts\Metrics\Counter
      */
     public function build()
     {

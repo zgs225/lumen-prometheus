@@ -2,15 +2,12 @@
 
 require_once __DIR__ .'/../vendor/autoload.php';
 
-use Illuminate\Container\Container;
-use Prometheus\Contracts\Store;
-use Prometheus\Stores\LaravelRedis;
+use Laravel\Lumen\Application;
 
-$container = new Container();
-Container::setInstance($container);
+$app = new Application(realpath(__DIR__.'/../'));
+$app->withFacades();
 
-
-$container->singleton('redis', function(Container $container) {
+$app->singleton('redis', function() {
     $redis = new Illuminate\Redis\RedisManager('phpredis', [
         'default' => [
             'host'         => 'redis',
@@ -24,8 +21,6 @@ $container->singleton('redis', function(Container $container) {
     return $redis;
 });
 
-$container->singleton(Store::class, function(Container $container) {
-    return new LaravelRedis($container->make('redis'));
-});
+$app->register(\Prometheus\Providers\PrometheusServiceProvider::class);
 
-return $container;
+return $app;

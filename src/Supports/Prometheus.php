@@ -14,12 +14,18 @@ class Prometheus
     protected $container;
 
     /**
+     * @var Registry
+     */
+    protected $registry;
+
+    /**
      * Prometheus constructor.
      * @param $container
      */
     public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->registry  = $container->make(Registry::class);
     }
 
     /**
@@ -28,7 +34,6 @@ class Prometheus
     public function counter()
     {
         $builder  = new CounterBuilder();
-        $registry = $this->container->make(Registry::class);
-        return $builder->setContainer($this->container)->setRegistry($registry);
+        return $builder->setContainer($this->container)->setRegistry($this->registry);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Prometheus\Providers;
 
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use Prometheus\Contracts\Registry;
 use Prometheus\Contracts\Store;
@@ -16,15 +16,15 @@ class PrometheusServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(Store::class, function(Application $app) {
+        $this->app->singleton(Store::class, function(Container $app) {
             return new LaravelRedis($app->make('redis'));
         });
 
-        $this->app->singleton(Registry::class, function(Application $app) {
+        $this->app->singleton(Registry::class, function(Container $app) {
             return new StoreRegistry($app, '_default');
         });
 
-        $this->app->singleton(Prometheus::class, function(Application $app) {
+        $this->app->singleton(Prometheus::class, function(Container $app) {
             return new Prometheus($app);
         });
     }
