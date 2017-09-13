@@ -3,7 +3,6 @@
 namespace Prometheus\Bridges;
 
 use Prometheus\Contracts\Bridge;
-use Prometheus\Contracts\Collector;
 use Prometheus\Contracts\Registry;
 use Prometheus\Metrics\MetricFamilySamples;
 use Prometheus\Metrics\Sample;
@@ -27,23 +26,45 @@ class TextFormatBridge implements Bridge
 
     public function bridge()
     {
-        $collectors = $this->registry->all();
-        $text       = '';
-        foreach($collectors as $collector) {
-            $text .= $this->bridgeCollector($collector);
+        $text           = '';
+        $metricFamilies = $this->getAndMergeAllMetricFamilies();
+
+        foreach($metricFamilies as $family)
+        {
+            $text .= $this->bridgeMetricFamily($family);
         }
+
         return $text;
     }
 
-    protected function bridgeCollector(Collector $collector)
+    /**
+     * 从 Registry 中获取所有的MetricFamily, 并且将名称相同的MetricFamily合并
+     */
+    protected function getAndMergeAllMetricFamilies()
     {
-        $text = '';
-        
-        foreach($collector->collect() as $metricFamily) {
-            $text .= $this->bridgeMetricFamily($metricFamily);
+        $collectors     = $this->registry->all();
+        $metricFamilies = [];
+        foreach ($collectors as $collector) {
+            $families = $collector->collect();
+            array_push($metricFamilies, ...$families);
         }
-        
-        return $text;
+        return $this->mergeAllMetricFamilies($metricFamilies);
+    }
+
+    protected function mergeAllMetricFamilies(array $families)
+    {
+        if (count($families) == 0)
+            return [];
+        $result = [];
+        foreach ($families as $family) {
+            $key = $family->getName();
+            if (!isset($result[$key]))
+                $result[$key] = $family;
+            else {
+                $result[$key]->pushSamples(...$family->getSamples());
+            }
+        }
+        return array_values($result);
     }
 
     protected function bridgeMetricFamily(MetricFamilySamples $familySamples)

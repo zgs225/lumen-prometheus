@@ -59,6 +59,11 @@ class MetricFamilySamples implements \JsonSerializable
         return $this->samples;
     }
 
+    public function pushSamples(...$samples)
+    {
+        array_push($this->samples, ...$samples);
+    }
+
     function jsonSerialize()
     {
         return [

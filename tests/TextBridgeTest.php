@@ -26,8 +26,6 @@ class TextBridgeTest extends TestCase
 # HELP lord_v3_test_total 测试计数器
 # TYPE lord_v3_test_total counter
 lord_v3_test_total 1
-# HELP lord_v3_test_total 测试计数器
-# TYPE lord_v3_test_total counter
 lord_v3_test_total{complex="4",status="1"} 0
 
 EOT;
@@ -52,8 +50,6 @@ EOT;
 # HELP lord_v3_test_total 测试计数器
 # TYPE lord_v3_test_total counter
 lord_v3_test_total %d
-# HELP lord_v3_test_total 测试计数器
-# TYPE lord_v3_test_total counter
 lord_v3_test_total{complex="4",status="2"} %s
 
 EOT;

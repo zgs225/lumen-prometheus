@@ -20,9 +20,9 @@ class Sample implements JsonSerializable
      */
     public function __construct($name, $labels, $value)
     {
-        $this->name = $name;
+        $this->name   = $name;
         $this->labels = $labels;
-        $this->value = $value;
+        $this->value  = $value;
     }
 
     /**
