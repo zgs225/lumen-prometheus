@@ -4,6 +4,7 @@ namespace Prometheus\Supports;
 
 use Illuminate\Contracts\Container\Container;
 use Prometheus\Builders\CounterBuilder;
+use Prometheus\Builders\GaugeBuilder;
 use Prometheus\Contracts\Registry;
 
 class Prometheus
@@ -44,7 +45,16 @@ class Prometheus
      */
     public function counter()
     {
-        $builder  = new CounterBuilder();
+        $builder = new CounterBuilder();
+        return $builder->setContainer($this->container)->setRegistry($this->registry);
+    }
+
+    /**
+     * @return \Prometheus\Contracts\Builder
+     */
+    public function gauge()
+    {
+        $builder = new GaugeBuilder();
         return $builder->setContainer($this->container)->setRegistry($this->registry);
     }
 
