@@ -14,7 +14,6 @@ class GaugeTest extends TestCase
             ->build();
         $gauge->set(3.14);
         $registry = new \Prometheus\Registry\BaseRegistry('test');
-        $registry->register($gauge);
         $bridge   = new \Prometheus\Bridges\TextFormatBridge($registry);
         $expected = <<< EOF
 # HELP lord_v3_test_gauge 测试仪表盘
@@ -22,6 +21,7 @@ class GaugeTest extends TestCase
 lord_v3_test_gauge 3.14
 
 EOF;
+        $registry->register($gauge);
         $this->assertEquals($expected, $bridge->bridge());
     }
 }
